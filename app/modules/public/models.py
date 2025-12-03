@@ -21,3 +21,4 @@ class PublicInfoData(BaseModel):
     upcoming_events: List[Event]
     latest_news: List[NewsItem]
     student_testimonials: List[Testimonial]
+    university_banner: List[str]

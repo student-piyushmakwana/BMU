@@ -54,7 +54,16 @@ class PublicViewModel:
             raise ExternalServiceError(f"Unexpected error: {e}")
 
     def _parse_public_info(self, soup: BeautifulSoup) -> dict:
-        results = {"upcoming_events": [], "latest_news": [], "student_testimonials": []}
+        results = {
+            "upcoming_events": [], 
+            "latest_news": [], 
+            "student_testimonials": [],
+            "university_banner": [
+                "https://bmu.gnums.co.in/images/BMU/1.jpg",
+                "https://bmu.gnums.co.in/images/BMU/2.jpg",
+                "https://bmu.gnums.co.in/images/BMU/3.jpg"
+            ]
+        }
         title_map = {"Upcoming Events": "upcoming_events", "Latest News": "latest_news"}
 
         for div in soup.find_all("div", class_="col-lg-6"):
