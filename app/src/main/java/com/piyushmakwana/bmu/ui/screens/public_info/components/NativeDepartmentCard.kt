@@ -21,8 +21,13 @@ import androidx.compose.ui.unit.dp
 import com.piyushmakwana.bmu.domain.model.Department
 
 @Composable
-fun NativeDepartmentCard(department: Department, modifier: Modifier = Modifier) {
+fun NativeDepartmentCard(
+    department: Department,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
+) {
     Card(
+        onClick = onClick,
         modifier = modifier.width(280.dp).height(120.dp),
         shape = RoundedCornerShape(16.dp),
         colors =

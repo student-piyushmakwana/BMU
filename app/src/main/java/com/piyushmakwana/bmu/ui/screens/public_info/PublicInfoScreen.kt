@@ -37,7 +37,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.piyushmakwana.bmu.navigation.Screen
 import com.piyushmakwana.bmu.ui.screens.public_info.components.ErrorState
 import com.piyushmakwana.bmu.ui.screens.public_info.components.NativeBannerCarousel
 import com.piyushmakwana.bmu.ui.screens.public_info.components.NativeDepartmentCard
@@ -49,7 +51,10 @@ import com.piyushmakwana.bmu.ui.screens.public_info.components.NativeTopBar
 import com.piyushmakwana.bmu.ui.screens.public_info.components.PublicInfoShimmer
 
 @Composable
-fun PublicInfoScreen(viewModel: PublicInfoViewModel = hiltViewModel()) {
+fun PublicInfoScreen(
+    navController: NavController,
+    viewModel: PublicInfoViewModel = hiltViewModel()
+) {
     val state = viewModel.state.value
     var isEventsExpanded by remember { mutableStateOf(false) }
     val uriHandler = LocalUriHandler.current
@@ -64,28 +69,24 @@ fun PublicInfoScreen(viewModel: PublicInfoViewModel = hiltViewModel()) {
                 ) {
                     item {
                         if (state.publicInfo.banners.isNotEmpty()) {
-                            NativeBannerCarousel(
-                                banners = state.publicInfo.banners
-                            )
+                            NativeBannerCarousel(banners = state.publicInfo.banners)
                             Spacer(modifier = Modifier.height(32.dp))
                         }
                     }
 
                     item {
                         Card(
-                            onClick = { /* TODO: Navigate to Login */ },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 24.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.primaryContainer
-                            ),
+                            onClick = { /* TODO: Navigate to Login */},
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
+                            colors =
+                                CardDefaults.cardColors(
+                                    containerColor =
+                                        MaterialTheme.colorScheme.primaryContainer
+                                ),
                             shape = RoundedCornerShape(16.dp)
                         ) {
                             Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp),
+                                modifier = Modifier.fillMaxWidth().padding(16.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.Center
                             ) {
@@ -108,17 +109,11 @@ fun PublicInfoScreen(viewModel: PublicInfoViewModel = hiltViewModel()) {
 
                     item {
                         if (state.publicInfo.latestNews.isNotEmpty()) {
-                            NativeSectionHeader(
-                                title = "Latest Updates"
-                            )
+                            NativeSectionHeader(title = "Latest Updates")
                             Spacer(modifier = Modifier.height(16.dp))
                             LazyRow(
-                                contentPadding =
-                                    PaddingValues(
-                                        horizontal = 24.dp
-                                    ),
-                                horizontalArrangement =
-                                    Arrangement.spacedBy(16.dp)
+                                contentPadding = PaddingValues(horizontal = 24.dp),
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
                             ) {
                                 items(state.publicInfo.latestNews) { news ->
                                     NativeNewsCard(
@@ -133,22 +128,16 @@ fun PublicInfoScreen(viewModel: PublicInfoViewModel = hiltViewModel()) {
 
                     item {
                         if (state.publicInfo.upcomingEvents.isNotEmpty()) {
-                            NativeSectionHeader(
-                                title = "Upcoming Events"
-                            )
+                            NativeSectionHeader(title = "Upcoming Events")
                             Spacer(modifier = Modifier.height(16.dp))
                         }
                     }
 
                     val events = state.publicInfo.upcomingEvents
-                    val displayEvents =
-                        if (isEventsExpanded) events else events.take(4)
+                    val displayEvents = if (isEventsExpanded) events else events.take(4)
 
-                    items(displayEvents) {event -> NativeEventRow(
-                        event = event,
-                        onClick = {
-                            uriHandler.openUri(event.link)
-                        })
+                    items(displayEvents) { event ->
+                        NativeEventRow(event = event, onClick = { uriHandler.openUri(event.link) })
                     }
 
                     item {
@@ -220,7 +209,16 @@ fun PublicInfoScreen(viewModel: PublicInfoViewModel = hiltViewModel()) {
                                 horizontalArrangement = Arrangement.spacedBy(16.dp)
                             ) {
                                 items(state.publicInfo.departments) { department ->
-                                    NativeDepartmentCard(department = department)
+                                    NativeDepartmentCard(
+                                        department = department,
+                                        onClick = {
+                                            navController.navigate(
+                                                Screen.DepartmentDetail.createRoute(
+                                                    department.bmuId
+                                                )
+                                            )
+                                        }
+                                    )
                                 }
                             }
                             Spacer(modifier = Modifier.height(40.dp))
@@ -229,25 +227,14 @@ fun PublicInfoScreen(viewModel: PublicInfoViewModel = hiltViewModel()) {
 
                     item {
                         if (state.publicInfo.testimonials.isNotEmpty()) {
-                            NativeSectionHeader(
-                                title = "Student Voices"
-                            )
+                            NativeSectionHeader(title = "Student Voices")
                             Spacer(modifier = Modifier.height(24.dp))
                             LazyRow(
-                                contentPadding =
-                                    PaddingValues(
-                                        horizontal = 24.dp
-                                    ),
-                                horizontalArrangement =
-                                    Arrangement.spacedBy(16.dp)
+                                contentPadding = PaddingValues(horizontal = 24.dp),
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
                             ) {
-                                items(
-                                    state.publicInfo
-                                        .testimonials
-                                ) { testimonial ->
-                                    NativeTestimonialCard(
-                                        testimonial
-                                    )
+                                items(state.publicInfo.testimonials) { testimonial ->
+                                    NativeTestimonialCard(testimonial)
                                 }
                             }
                             Spacer(modifier = Modifier.height(32.dp))
@@ -257,10 +244,7 @@ fun PublicInfoScreen(viewModel: PublicInfoViewModel = hiltViewModel()) {
             }
 
             if (state.error.isNotBlank()) {
-                ErrorState(
-                    message = state.error,
-                    modifier = Modifier.align(Alignment.Center)
-                )
+                ErrorState(message = state.error, modifier = Modifier.align(Alignment.Center))
             }
 
             if (state.isLoading) {

@@ -2,20 +2,22 @@ package com.piyushmakwana.bmu.di
 
 import com.piyushmakwana.bmu.common.Constants
 import com.piyushmakwana.bmu.data.remote.BMUApi
+import com.piyushmakwana.bmu.data.repository.DepartmentDetailRepositoryImpl
 import com.piyushmakwana.bmu.data.repository.PublicInfoRepositoryImpl
+import com.piyushmakwana.bmu.domain.repository.DepartmentDetailRepository
 import com.piyushmakwana.bmu.domain.repository.PublicInfoRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
-import java.util.concurrent.TimeUnit
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -55,5 +57,11 @@ object AppModule {
     @Singleton
     fun providePublicInfoRepository(api: BMUApi): PublicInfoRepository {
         return PublicInfoRepositoryImpl(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDepartmentDetailRepository(api: BMUApi): DepartmentDetailRepository {
+        return DepartmentDetailRepositoryImpl(api)
     }
 }
