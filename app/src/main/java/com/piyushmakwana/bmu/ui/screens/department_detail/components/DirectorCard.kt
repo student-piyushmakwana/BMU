@@ -1,8 +1,12 @@
 package com.piyushmakwana.bmu.ui.screens.department_detail.components
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,8 +31,13 @@ import androidx.compose.ui.unit.dp
 import com.piyushmakwana.bmu.domain.model.Director
 import com.piyushmakwana.bmu.ui.common.ShimmerImage
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun DirectorCard(director: Director, modifier: Modifier = Modifier) {
+fun DirectorCard(
+    director: Director,
+    modifier: Modifier = Modifier,
+    onImageLongClick: (String) -> Unit
+) {
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -40,14 +49,22 @@ fun DirectorCard(director: Director, modifier: Modifier = Modifier) {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.Top) {
-                ShimmerImage(
-                    model = director.photo,
-                    contentDescription = director.name,
+                Box(
                     modifier =
                         Modifier.size(100.dp)
-                            .clip(RoundedCornerShape(12.dp)),
-                    contentScale = ContentScale.Crop
-                )
+                            .clip(RoundedCornerShape(12.dp))
+                            .combinedClickable(
+                                onClick = {},
+                                onLongClick = { onImageLongClick(director.photo) }
+                            )
+                ) {
+                    ShimmerImage(
+                        model = director.photo,
+                        contentDescription = director.name,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                }
                 Spacer(modifier = Modifier.width(16.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(

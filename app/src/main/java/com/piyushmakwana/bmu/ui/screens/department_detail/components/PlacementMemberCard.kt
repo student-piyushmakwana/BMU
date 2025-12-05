@@ -1,6 +1,8 @@
 package com.piyushmakwana.bmu.ui.screens.department_detail.components
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,8 +34,13 @@ import androidx.compose.ui.unit.dp
 import com.piyushmakwana.bmu.domain.model.PlacementMember
 import com.piyushmakwana.bmu.ui.common.ShimmerImage
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PlacementMemberCard(member: PlacementMember, modifier: Modifier = Modifier) {
+fun PlacementMemberCard(
+    member: PlacementMember,
+    modifier: Modifier = Modifier,
+    onImageLongClick: (String) -> Unit
+) {
     Card(
         modifier = modifier.width(150.dp).height(220.dp),
         shape = RoundedCornerShape(16.dp),
@@ -66,7 +73,11 @@ fun PlacementMemberCard(member: PlacementMember, modifier: Modifier = Modifier) 
                                     )
                             )
                         )
-                        .padding(3.dp),
+                        .padding(3.dp)
+                        .combinedClickable(
+                            onClick = {},
+                            onLongClick = { onImageLongClick(member.photo) }
+                        ),
                 contentAlignment = Alignment.Center
             ) {
                 ShimmerImage(

@@ -72,7 +72,7 @@ fun ProgramSection(programName: String, program: Program, modifier: Modifier = M
                             text = program.description.first(),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            maxLines = 3,
+                            maxLines = 10,
                             overflow = TextOverflow.Ellipsis
                         )
                         Spacer(modifier = Modifier.height(12.dp))

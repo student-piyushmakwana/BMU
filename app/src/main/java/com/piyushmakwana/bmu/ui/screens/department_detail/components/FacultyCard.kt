@@ -1,6 +1,8 @@
 package com.piyushmakwana.bmu.ui.screens.department_detail.components
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -28,8 +30,13 @@ import androidx.compose.ui.unit.dp
 import com.piyushmakwana.bmu.domain.model.Faculty
 import com.piyushmakwana.bmu.ui.common.ShimmerImage
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun FacultyCard(faculty: Faculty, modifier: Modifier = Modifier) {
+fun FacultyCard(
+    faculty: Faculty,
+    modifier: Modifier = Modifier,
+    onImageLongClick: (String) -> Unit
+) {
     Card(
         modifier = modifier.width(150.dp).height(220.dp),
         shape = RoundedCornerShape(16.dp),
@@ -51,24 +58,22 @@ fun FacultyCard(faculty: Faculty, modifier: Modifier = Modifier) {
                             Brush.linearGradient(
                                 colors =
                                     listOf(
-                                        MaterialTheme
-                                            .colorScheme
-                                            .primary
-                                            .copy(
-                                                alpha =
-                                                    0.3f
+                                        MaterialTheme.colorScheme
+                                            .primary.copy(
+                                                alpha = 0.3f
                                             ),
-                                        MaterialTheme
-                                            .colorScheme
-                                            .tertiary
-                                            .copy(
-                                                alpha =
-                                                    0.3f
+                                        MaterialTheme.colorScheme
+                                            .tertiary.copy(
+                                                alpha = 0.3f
                                             )
                                     )
                             )
                         )
-                        .padding(3.dp),
+                        .padding(3.dp)
+                        .combinedClickable(
+                            onClick = {},
+                            onLongClick = { onImageLongClick(faculty.photo) }
+                        ),
                 contentAlignment = Alignment.Center
             ) {
                 ShimmerImage(
@@ -110,9 +115,7 @@ fun FacultyCard(faculty: Faculty, modifier: Modifier = Modifier) {
                 modifier =
                     Modifier.clip(RoundedCornerShape(8.dp))
                         .background(
-                            MaterialTheme.colorScheme.primary.copy(
-                                alpha = 0.1f
-                            )
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
                         )
                         .padding(horizontal = 8.dp, vertical = 4.dp)
             ) {

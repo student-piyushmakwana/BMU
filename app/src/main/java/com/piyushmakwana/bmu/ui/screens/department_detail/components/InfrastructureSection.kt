@@ -38,7 +38,7 @@ fun InfrastructureSection(
         contentPadding = PaddingValues(horizontal = 24.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        items(infrastructure) { item ->
+        items(items = infrastructure) { item ->
             Card(
                 onClick = { onAlbumClick(item) },
                 shape = RoundedCornerShape(16.dp),
