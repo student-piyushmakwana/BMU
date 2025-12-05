@@ -62,8 +62,8 @@ import com.piyushmakwana.bmu.ui.screens.public_info.components.NativeSectionHead
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DepartmentDetailScreen(
-        navController: NavController,
-        viewModel: DepartmentDetailViewModel = hiltViewModel()
+    navController: NavController,
+    viewModel: DepartmentDetailViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
 
@@ -77,21 +77,21 @@ fun DepartmentDetailScreen(
     }
 
     Scaffold(
-            topBar = {
-                NativeBackTopBar(
-                        title = state.departmentDetail?.name ?: "Department Details",
-                        onBackClick = { navController.popBackStack() },
-                        maxLines = 2
-                )
-            },
-            containerColor = MaterialTheme.colorScheme.surface
+        topBar = {
+            NativeBackTopBar(
+                title = state.departmentDetail?.name ?: "Department Details",
+                onBackClick = { navController.popBackStack() },
+                maxLines = 2
+            )
+        },
+        containerColor = MaterialTheme.colorScheme.surface
     ) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
             if (state.departmentDetail != null) {
                 val detail = state.departmentDetail
                 LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(bottom = 48.dp)
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(bottom = 48.dp)
                 ) {
                     item { Spacer(modifier = Modifier.height(16.dp)) }
 
@@ -99,8 +99,8 @@ fun DepartmentDetailScreen(
                         NativeSectionHeader(title = "Director")
                         Spacer(modifier = Modifier.height(16.dp))
                         DirectorCard(
-                                director = detail.director,
-                                modifier = Modifier.padding(horizontal = 24.dp)
+                            director = detail.director,
+                            modifier = Modifier.padding(horizontal = 24.dp)
                         )
                         Spacer(modifier = Modifier.height(32.dp))
                     }
@@ -110,8 +110,8 @@ fun DepartmentDetailScreen(
                             NativeSectionHeader(title = "Faculty Members")
                             Spacer(modifier = Modifier.height(16.dp))
                             LazyRow(
-                                    contentPadding = PaddingValues(horizontal = 24.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                contentPadding = PaddingValues(horizontal = 24.dp),
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
                             ) {
                                 items(detail.faculty) { faculty -> FacultyCard(faculty = faculty) }
                             }
@@ -126,9 +126,9 @@ fun DepartmentDetailScreen(
                         }
                         items(detail.programs.entries.toList()) { (name, program) ->
                             ProgramSection(
-                                    programName = name,
-                                    program = program,
-                                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp)
+                                programName = name,
+                                program = program,
+                                modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp)
                             )
                         }
                         item { Spacer(modifier = Modifier.height(32.dp)) }
@@ -139,8 +139,8 @@ fun DepartmentDetailScreen(
                             NativeSectionHeader(title = "Infrastructure")
                             Spacer(modifier = Modifier.height(16.dp))
                             InfrastructureSection(
-                                    infrastructure = detail.infrastructure,
-                                    onAlbumClick = { selectedInfrastructure = it }
+                                infrastructure = detail.infrastructure,
+                                onAlbumClick = { selectedInfrastructure = it }
                             )
                             Spacer(modifier = Modifier.height(32.dp))
                         }
@@ -151,8 +151,8 @@ fun DepartmentDetailScreen(
                             NativeSectionHeader(title = "Gallery")
                             Spacer(modifier = Modifier.height(16.dp))
                             GallerySection(
-                                    gallery = detail.gallery,
-                                    onAlbumClick = { selectedGallery = it }
+                                gallery = detail.gallery,
+                                onAlbumClick = { selectedGallery = it }
                             )
                             Spacer(modifier = Modifier.height(32.dp))
                         }
@@ -163,8 +163,8 @@ fun DepartmentDetailScreen(
                             NativeSectionHeader(title = "Placement Cell")
                             Spacer(modifier = Modifier.height(16.dp))
                             LazyRow(
-                                    contentPadding = PaddingValues(horizontal = 24.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                contentPadding = PaddingValues(horizontal = 24.dp),
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
                             ) {
                                 items(detail.placement) { member ->
                                     PlacementMemberCard(member = member)
@@ -179,122 +179,110 @@ fun DepartmentDetailScreen(
                             Spacer(modifier = Modifier.height(16.dp))
 
                             val departmentCounts =
-                                    remember(detail.studentsRecruited) {
-                                        detail.studentsRecruited
-                                                .groupingBy { it.departmentName }
-                                                .eachCount()
-                                    }
+                                remember(detail.studentsRecruited) {
+                                    detail.studentsRecruited
+                                        .groupingBy { it.departmentName }
+                                        .eachCount()
+                                }
 
                             val totalStudents = detail.studentsRecruited.size
                             val totalDepartments = departmentCounts.size
 
                             Column(modifier = Modifier.padding(horizontal = 24.dp)) {
                                 Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceAround
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceAround
                                 ) {
                                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                         Text(
-                                                text = "$totalStudents",
-                                                style = MaterialTheme.typography.headlineMedium,
-                                                fontWeight = FontWeight.Bold,
-                                                color = MaterialTheme.colorScheme.primary
+                                            text = "$totalStudents",
+                                            style = MaterialTheme.typography.headlineMedium,
+                                            fontWeight = FontWeight.Bold,
+                                            color = MaterialTheme.colorScheme.primary
                                         )
                                         Text(
-                                                text = "Total Students",
-                                                style = MaterialTheme.typography.labelMedium,
-                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            text = "Total Students",
+                                            style = MaterialTheme.typography.labelMedium,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                     }
                                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                         Text(
-                                                text = "$totalDepartments",
-                                                style = MaterialTheme.typography.headlineMedium,
-                                                fontWeight = FontWeight.Bold,
-                                                color = MaterialTheme.colorScheme.secondary
+                                            text = "$totalDepartments",
+                                            style = MaterialTheme.typography.headlineMedium,
+                                            fontWeight = FontWeight.Bold,
+                                            color = MaterialTheme.colorScheme.secondary
                                         )
                                         Text(
-                                                text = "Departments",
-                                                style = MaterialTheme.typography.labelMedium,
-                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            text = "Departments",
+                                            style = MaterialTheme.typography.labelMedium,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                     }
                                 }
                                 Spacer(modifier = Modifier.height(16.dp))
                                 Text(
-                                        text =
-                                                "This chart illustrates the distribution of recruited students across various departments, highlighting key placement areas.",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        lineHeight =
-                                                MaterialTheme.typography.bodySmall.lineHeight * 1.2
+                                    text =
+                                        "This chart illustrates the distribution of recruited students across various departments, highlighting key placement areas.",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    lineHeight =
+                                        MaterialTheme.typography.bodySmall.lineHeight * 1.2
                                 )
                             }
                             Spacer(modifier = Modifier.height(24.dp))
 
                             val colors =
-                                    listOf(
-                                            MaterialTheme.colorScheme.primaryContainer.copy(
-                                                    alpha = 1.0f
-                                            ),
-                                            MaterialTheme.colorScheme.secondaryContainer.copy(
-                                                    alpha = 1.0f
-                                            ),
-                                            MaterialTheme.colorScheme.tertiaryContainer.copy(
-                                                    alpha = 1.0f
-                                            ),
-                                            MaterialTheme.colorScheme.errorContainer.copy(
-                                                    alpha = 1.0f
-                                            ),
-                                            MaterialTheme.colorScheme.primaryContainer.copy(
-                                                    alpha = 0.90f
-                                            ),
-                                            MaterialTheme.colorScheme.secondaryContainer.copy(
-                                                    alpha = 0.90f
-                                            ),
-                                            MaterialTheme.colorScheme.tertiaryContainer.copy(
-                                                    alpha = 0.90f
-                                            ),
-                                            MaterialTheme.colorScheme.errorContainer.copy(
-                                                    alpha = 0.90f
-                                            ),
-                                            MaterialTheme.colorScheme.primaryContainer.copy(
-                                                    alpha = 0.80f
-                                            ),
-                                            MaterialTheme.colorScheme.secondaryContainer.copy(
-                                                    alpha = 0.80f
-                                            ),
-                                            MaterialTheme.colorScheme.tertiaryContainer.copy(
-                                                    alpha = 0.80f
-                                            ),
-                                            MaterialTheme.colorScheme.errorContainer.copy(
-                                                    alpha = 0.80f
-                                            ),
-                                            MaterialTheme.colorScheme.primaryContainer.copy(
-                                                    alpha = 0.60f
-                                            ),
-                                            MaterialTheme.colorScheme.secondaryContainer.copy(
-                                                    alpha = 0.60f
-                                            ),
-                                            MaterialTheme.colorScheme.tertiaryContainer.copy(
-                                                    alpha = 0.60f
-                                            ),
-                                            MaterialTheme.colorScheme.errorContainer.copy(
-                                                    alpha = 0.60f
-                                            )
+                                listOf(
+                                    MaterialTheme.colorScheme.primary.copy(
+                                        alpha = 0.80f
+                                    ),
+                                    MaterialTheme.colorScheme.secondary.copy(
+                                        alpha = 0.80f
+                                    ),
+                                    MaterialTheme.colorScheme.tertiary.copy(
+                                        alpha = 0.80f
+                                    ),
+                                    MaterialTheme.colorScheme.error.copy(
+                                        alpha = 0.80f
+                                    ),
+                                    MaterialTheme.colorScheme.primary.copy(
+                                        alpha = 0.70f
+                                    ),
+                                    MaterialTheme.colorScheme.secondary.copy(
+                                        alpha = 0.70f
+                                    ),
+                                    MaterialTheme.colorScheme.tertiary.copy(
+                                        alpha = 0.70f
+                                    ),
+                                    MaterialTheme.colorScheme.error.copy(
+                                        alpha = 0.70f
+                                    ),
+                                    MaterialTheme.colorScheme.primary.copy(
+                                        alpha = 0.60f
+                                    ),
+                                    MaterialTheme.colorScheme.secondary.copy(
+                                        alpha = 0.60f
+                                    ),
+                                    MaterialTheme.colorScheme.tertiary.copy(
+                                        alpha = 0.60f
+                                    ),
+                                    MaterialTheme.colorScheme.error.copy(
+                                        alpha = 0.60f
                                     )
+                                )
 
                             Box(
-                                    modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
-                                    contentAlignment = Alignment.Center
+                                modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
+                                contentAlignment = Alignment.Center
                             ) {
                                 PieChart(
-                                        data = departmentCounts,
-                                        colors = colors,
-                                        radiusOuter = 100.dp,
-                                        onSliceClick = { department ->
-                                            selectedStudentGroup = department
-                                        }
+                                    data = departmentCounts,
+                                    colors = colors,
+                                    radiusOuter = 100.dp,
+                                    onSliceClick = { department ->
+                                        selectedStudentGroup = department
+                                    }
                                 )
                             }
 
@@ -306,36 +294,36 @@ fun DepartmentDetailScreen(
                                     val percentage = (count.toFloat() / totalStudents * 100).toInt()
 
                                     Card(
-                                            shape = RoundedCornerShape(8.dp),
-                                            modifier =
-                                                    Modifier.fillMaxWidth()
-                                                            .padding(vertical = 4.dp),
-                                            onClick = { selectedStudentGroup = dept }
+                                        shape = RoundedCornerShape(8.dp),
+                                        modifier =
+                                            Modifier.fillMaxWidth()
+                                                .padding(vertical = 4.dp),
+                                        onClick = { selectedStudentGroup = dept }
                                     ) {
                                         Row(
-                                                verticalAlignment = Alignment.CenterVertically,
-                                                modifier = Modifier.padding(12.dp)
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            modifier = Modifier.padding(12.dp)
                                         ) {
                                             Box(
-                                                    modifier =
-                                                            Modifier.size(12.dp)
-                                                                    .clip(CircleShape)
-                                                                    .background(color)
+                                                modifier =
+                                                    Modifier.size(12.dp)
+                                                        .clip(CircleShape)
+                                                        .background(color)
                                             )
                                             Spacer(modifier = Modifier.width(12.dp))
                                             Text(
-                                                    text = dept,
-                                                    style = MaterialTheme.typography.bodyMedium,
-                                                    color = MaterialTheme.colorScheme.onSurface,
-                                                    modifier = Modifier.weight(1f)
+                                                text = dept,
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                color = MaterialTheme.colorScheme.onSurface,
+                                                modifier = Modifier.weight(1f)
                                             )
                                             Text(
-                                                    text = "$percentage%",
-                                                    style = MaterialTheme.typography.bodyMedium,
-                                                    fontWeight = FontWeight.Bold,
-                                                    color =
-                                                            MaterialTheme.colorScheme
-                                                                    .onSurfaceVariant
+                                                text = "$percentage%",
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                fontWeight = FontWeight.Bold,
+                                                color =
+                                                    MaterialTheme.colorScheme
+                                                        .onSurfaceVariant
                                             )
                                         }
                                     }
@@ -357,35 +345,35 @@ fun DepartmentDetailScreen(
 
             if (showBottomSheet) {
                 ModalBottomSheet(
-                        onDismissRequest = {
-                            showBottomSheet = false
-                            selectedInfrastructure = null
-                            selectedGallery = null
-                            selectedStudentGroup = null
-                        },
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+                    onDismissRequest = {
+                        showBottomSheet = false
+                        selectedInfrastructure = null
+                        selectedGallery = null
+                        selectedStudentGroup = null
+                    },
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
                 ) {
                     if (selectedStudentGroup != null) {
                         val students =
-                                state.departmentDetail?.studentsRecruited?.filter {
-                                    it.departmentName == selectedStudentGroup
-                                }
-                                        ?: emptyList()
+                            state.departmentDetail?.studentsRecruited?.filter {
+                                it.departmentName == selectedStudentGroup
+                            }
+                                ?: emptyList()
 
                         Column(modifier = Modifier.fillMaxWidth().padding(bottom = 32.dp)) {
                             Text(
-                                    text = selectedStudentGroup ?: "",
-                                    style = MaterialTheme.typography.titleLarge,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier =
-                                            Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
+                                text = selectedStudentGroup ?: "",
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier =
+                                    Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
                             )
 
                             LazyColumn(
-                                    contentPadding = PaddingValues(horizontal = 24.dp),
-                                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                                    modifier = Modifier.height(400.dp)
+                                contentPadding = PaddingValues(horizontal = 24.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                modifier = Modifier.height(400.dp)
                             ) {
                                 items(students) { student ->
                                     StudentRecruitedRow(student = student, showDepartment = false)
@@ -395,34 +383,34 @@ fun DepartmentDetailScreen(
                     } else {
                         val title = selectedInfrastructure?.title ?: selectedGallery?.title ?: ""
                         val images =
-                                selectedInfrastructure?.images
-                                        ?: selectedGallery?.images ?: emptyList()
+                            selectedInfrastructure?.images
+                                ?: selectedGallery?.images ?: emptyList()
 
                         Column(modifier = Modifier.fillMaxWidth().padding(bottom = 32.dp)) {
                             Text(
-                                    text = title,
-                                    style = MaterialTheme.typography.titleLarge,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier =
-                                            Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
+                                text = title,
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier =
+                                    Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
                             )
 
                             LazyVerticalGrid(
-                                    columns = GridCells.Fixed(2),
-                                    contentPadding = PaddingValues(horizontal = 24.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                                columns = GridCells.Fixed(2),
+                                contentPadding = PaddingValues(horizontal = 24.dp),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                verticalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
                                 items(images) { imageUrl ->
                                     Card(
-                                            shape = RoundedCornerShape(12.dp),
-                                            modifier = Modifier.aspectRatio(1f)
+                                        shape = RoundedCornerShape(12.dp),
+                                        modifier = Modifier.aspectRatio(1f)
                                     ) {
                                         ShimmerImage(
-                                                model = imageUrl,
-                                                contentDescription = null,
-                                                modifier = Modifier.fillMaxSize(),
-                                                contentScale = ContentScale.Crop
+                                            model = imageUrl,
+                                            contentDescription = null,
+                                            modifier = Modifier.fillMaxSize(),
+                                            contentScale = ContentScale.Crop
                                         )
                                     }
                                 }
