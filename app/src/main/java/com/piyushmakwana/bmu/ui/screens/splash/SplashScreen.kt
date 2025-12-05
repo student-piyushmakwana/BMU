@@ -1,6 +1,5 @@
 package com.piyushmakwana.bmu.ui.screens.splash
 
-import android.view.animation.OvershootInterpolator
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -22,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
@@ -38,28 +36,17 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SplashScreen(navController: NavController) {
-    val scale = remember { Animatable(0f) }
+    val logoAlpha = remember { Animatable(0f) }
     val textAlpha = remember { Animatable(0f) }
 
     LaunchedEffect(key1 = true) {
         launch {
-            scale.animateTo(
-                targetValue = 1f,
-                animationSpec = tween(
-                    durationMillis = 800,
-                    easing = {
-                        OvershootInterpolator(2f).getInterpolation(it)
-                    }
-                )
-            )
+            logoAlpha.animateTo(targetValue = 1f, animationSpec = tween(durationMillis = 1000))
         }
 
         launch {
             delay(300)
-            textAlpha.animateTo(
-                targetValue = 1f,
-                animationSpec = tween(durationMillis = 800)
-            )
+            textAlpha.animateTo(targetValue = 1f, animationSpec = tween(durationMillis = 800))
         }
 
         delay(2500L)
@@ -89,11 +76,15 @@ fun SplashScreen(navController: NavController) {
             verticalArrangement = Arrangement.Center
         ) {
             Box(
-                modifier = Modifier
-                    .scale(scale.value)
-                    .size(160.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f)),
+                modifier =
+                    Modifier.alpha(logoAlpha.value)
+                        .size(160.dp)
+                        .clip(CircleShape)
+                        .background(
+                            MaterialTheme.colorScheme.primaryContainer.copy(
+                                alpha = 0.2f
+                            )
+                        ),
                 contentAlignment = Alignment.Center
             ) {
                 Image(
