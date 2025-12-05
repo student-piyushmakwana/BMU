@@ -55,19 +55,13 @@ fun PlacementMemberCard(member: PlacementMember, modifier: Modifier = Modifier) 
                             Brush.linearGradient(
                                 colors =
                                     listOf(
-                                        MaterialTheme
-                                            .colorScheme
-                                            .primary
-                                            .copy(
-                                                alpha =
-                                                    0.3f
+                                        MaterialTheme.colorScheme
+                                            .primary.copy(
+                                                alpha = 0.3f
                                             ),
-                                        MaterialTheme
-                                            .colorScheme
-                                            .tertiary
-                                            .copy(
-                                                alpha =
-                                                    0.3f
+                                        MaterialTheme.colorScheme
+                                            .tertiary.copy(
+                                                alpha = 0.3f
                                             )
                                     )
                             )
@@ -112,9 +106,7 @@ fun PlacementMemberCard(member: PlacementMember, modifier: Modifier = Modifier) 
                 modifier =
                     Modifier.clip(RoundedCornerShape(8.dp))
                         .background(
-                            MaterialTheme.colorScheme.primary.copy(
-                                alpha = 0.1f
-                            )
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
                         )
                         .padding(horizontal = 8.dp, vertical = 6.dp)
             ) {
@@ -127,7 +119,7 @@ fun PlacementMemberCard(member: PlacementMember, modifier: Modifier = Modifier) 
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = member.phone,
+                        text = formatPhoneNumber(member.phone),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Medium
@@ -135,5 +127,14 @@ fun PlacementMemberCard(member: PlacementMember, modifier: Modifier = Modifier) 
                 }
             }
         }
+    }
+}
+
+private fun formatPhoneNumber(phone: String): String {
+    val cleaned = phone.replace("+91", "").replace(" ", "")
+    return if (cleaned.length == 10) {
+        "${cleaned.take(5)} ${cleaned.substring(5)}"
+    } else {
+        cleaned
     }
 }
