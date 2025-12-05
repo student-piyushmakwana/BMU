@@ -79,23 +79,25 @@ fun DepartmentDetailScreen(
         showBottomSheet = true
     }
 
-    Scaffold(
-        topBar = {
-            NativeBackTopBar(
-                title = state.departmentDetail?.name ?: "Department Details",
-                onBackClick = { navController.popBackStack() },
-                maxLines = 2
-            )
-        },
-        containerColor = MaterialTheme.colorScheme.surface
-    ) { paddingValues ->
-        Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
-            val blurModifier = if (selectedProfileImage != null) Modifier.blur(16.dp) else Modifier
+    val blurModifier = if (selectedProfileImage != null) Modifier.blur(16.dp) else Modifier
 
-            Box(modifier = Modifier.fillMaxSize().then(blurModifier)) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+            topBar = {
+                NativeBackTopBar(
+                    title = state.departmentDetail?.name ?: "Department Details",
+                    onBackClick = { navController.popBackStack() },
+                    maxLines = 2
+                )
+            },
+            containerColor = MaterialTheme.colorScheme.surface,
+            modifier = Modifier.fillMaxSize().then(blurModifier)
+        ) { paddingValues ->
+            Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
                 if (state.departmentDetail != null) {
                     val detail = state.departmentDetail
-                    val programsList = remember(detail.programs) { detail.programs.entries.toList() }
+                    val programsList =
+                        remember(detail.programs) { detail.programs.entries.toList() }
 
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
@@ -143,7 +145,11 @@ fun DepartmentDetailScreen(
                                 ProgramSection(
                                     programName = name,
                                     program = program,
-                                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp)
+                                    modifier =
+                                        Modifier.padding(
+                                            horizontal = 24.dp,
+                                            vertical = 4.dp
+                                        )
                                 )
                             }
                             item { Spacer(modifier = Modifier.height(32.dp)) }
@@ -221,7 +227,9 @@ fun DepartmentDetailScreen(
                                             Text(
                                                 text = "Total Students",
                                                 style = MaterialTheme.typography.labelMedium,
-                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                color =
+                                                    MaterialTheme.colorScheme
+                                                        .onSurfaceVariant
                                             )
                                         }
                                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -234,7 +242,9 @@ fun DepartmentDetailScreen(
                                             Text(
                                                 text = "Departments",
                                                 style = MaterialTheme.typography.labelMedium,
-                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                color =
+                                                    MaterialTheme.colorScheme
+                                                        .onSurfaceVariant
                                             )
                                         }
                                     }
@@ -245,24 +255,43 @@ fun DepartmentDetailScreen(
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         lineHeight =
-                                            MaterialTheme.typography.bodySmall.lineHeight * 1.2
+                                            MaterialTheme.typography.bodySmall.lineHeight *
+                                                    1.2
                                     )
                                 }
                                 Spacer(modifier = Modifier.height(24.dp))
 
                                 val colors =
                                     listOf(
-                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.80f),
-                                        MaterialTheme.colorScheme.secondary.copy(alpha = 0.80f),
-                                        MaterialTheme.colorScheme.tertiary.copy(alpha = 0.80f),
+                                        MaterialTheme.colorScheme.primary.copy(
+                                            alpha = 0.80f
+                                        ),
+                                        MaterialTheme.colorScheme.secondary.copy(
+                                            alpha = 0.80f
+                                        ),
+                                        MaterialTheme.colorScheme.tertiary.copy(
+                                            alpha = 0.80f
+                                        ),
                                         MaterialTheme.colorScheme.error.copy(alpha = 0.80f),
-                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.70f),
-                                        MaterialTheme.colorScheme.secondary.copy(alpha = 0.70f),
-                                        MaterialTheme.colorScheme.tertiary.copy(alpha = 0.70f),
+                                        MaterialTheme.colorScheme.primary.copy(
+                                            alpha = 0.70f
+                                        ),
+                                        MaterialTheme.colorScheme.secondary.copy(
+                                            alpha = 0.70f
+                                        ),
+                                        MaterialTheme.colorScheme.tertiary.copy(
+                                            alpha = 0.70f
+                                        ),
                                         MaterialTheme.colorScheme.error.copy(alpha = 0.70f),
-                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.60f),
-                                        MaterialTheme.colorScheme.secondary.copy(alpha = 0.60f),
-                                        MaterialTheme.colorScheme.tertiary.copy(alpha = 0.60f),
+                                        MaterialTheme.colorScheme.primary.copy(
+                                            alpha = 0.60f
+                                        ),
+                                        MaterialTheme.colorScheme.secondary.copy(
+                                            alpha = 0.60f
+                                        ),
+                                        MaterialTheme.colorScheme.tertiary.copy(
+                                            alpha = 0.60f
+                                        ),
                                         MaterialTheme.colorScheme.error.copy(alpha = 0.60f)
                                     )
 
@@ -285,7 +314,8 @@ fun DepartmentDetailScreen(
                                             index,
                                             (dept, count) ->
                                         val color = colors.getOrElse(index) { Color.Gray }
-                                        val percentage = (count.toFloat() / totalStudents * 100).toInt()
+                                        val percentage =
+                                            (count.toFloat() / totalStudents * 100).toInt()
 
                                         Card(
                                             shape = RoundedCornerShape(8.dp),
@@ -361,7 +391,10 @@ fun DepartmentDetailScreen(
                                     style = MaterialTheme.typography.titleLarge,
                                     fontWeight = FontWeight.Bold,
                                     modifier =
-                                        Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
+                                        Modifier.padding(
+                                            horizontal = 24.dp,
+                                            vertical = 16.dp
+                                        )
                                 )
 
                                 LazyColumn(
@@ -370,12 +403,16 @@ fun DepartmentDetailScreen(
                                     modifier = Modifier.height(400.dp)
                                 ) {
                                     items(items = students) { student ->
-                                        StudentRecruitedRow(student = student, showDepartment = false)
+                                        StudentRecruitedRow(
+                                            student = student,
+                                            showDepartment = false
+                                        )
                                     }
                                 }
                             }
                         } else {
-                            val title = selectedInfrastructure?.title ?: selectedGallery?.title ?: ""
+                            val title =
+                                selectedInfrastructure?.title ?: selectedGallery?.title ?: ""
                             val images =
                                 selectedInfrastructure?.images
                                     ?: selectedGallery?.images ?: emptyList()
@@ -386,7 +423,10 @@ fun DepartmentDetailScreen(
                                     style = MaterialTheme.typography.titleLarge,
                                     fontWeight = FontWeight.Bold,
                                     modifier =
-                                        Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
+                                        Modifier.padding(
+                                            horizontal = 24.dp,
+                                            vertical = 16.dp
+                                        )
                                 )
 
                                 LazyVerticalGrid(
@@ -414,14 +454,12 @@ fun DepartmentDetailScreen(
                     }
                 }
             }
-
-
-            if (selectedProfileImage != null) {
-                FullScreenProfileImage(
-                    imageUrl = selectedProfileImage!!,
-                    onDismiss = { selectedProfileImage = null }
-                )
-            }
+        }
+        if (selectedProfileImage != null) {
+            FullScreenProfileImage(
+                imageUrl = selectedProfileImage!!,
+                onDismiss = { selectedProfileImage = null }
+            )
         }
     }
 }
