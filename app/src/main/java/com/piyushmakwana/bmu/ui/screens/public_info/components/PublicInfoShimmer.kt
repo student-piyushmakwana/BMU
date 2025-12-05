@@ -31,6 +31,18 @@ fun PublicInfoShimmer() {
         }
 
         item {
+            Box(
+                modifier =
+                    Modifier.fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                        .height(64.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .shimmerEffect()
+            )
+            Spacer(modifier = Modifier.height(32.dp))
+        }
+
+        item {
             Column(modifier = Modifier.padding(horizontal = 24.dp)) {
                 Box(
                     modifier =
