@@ -1,6 +1,10 @@
 package com.piyushmakwana.bmu.di
 
+import android.content.Context
+import androidx.room.Room
 import com.piyushmakwana.bmu.common.Constants
+import com.piyushmakwana.bmu.data.local.BMUDao
+import com.piyushmakwana.bmu.data.local.BMUDatabase
 import com.piyushmakwana.bmu.data.remote.BMUApi
 import com.piyushmakwana.bmu.data.repository.DepartmentDetailRepositoryImpl
 import com.piyushmakwana.bmu.data.repository.PublicInfoRepositoryImpl
@@ -9,6 +13,7 @@ import com.piyushmakwana.bmu.domain.repository.PublicInfoRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
@@ -25,15 +30,25 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideBMUDatabase(@ApplicationContext context: Context): BMUDatabase {
+        return Room.databaseBuilder(context, BMUDatabase::class.java, "bmu_db").build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideBMUDao(database: BMUDatabase): BMUDao {
+        return database.bmuDao()
+    }
+
+    @Provides
+    @Singleton
     fun provideOkHttpClient(): OkHttpClient {
-        val logging = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }
+        val logging = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
         return OkHttpClient.Builder()
-            .addInterceptor(logging)
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .build()
+                .addInterceptor(logging)
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build()
     }
 
     @Provides
@@ -46,22 +61,22 @@ object AppModule {
         val contentType = "application/json".toMediaType()
 
         return Retrofit.Builder()
-            .baseUrl(Constants.BASE_URL)
-            .client(okHttpClient)
-            .addConverterFactory(json.asConverterFactory(contentType))
-            .build()
-            .create(BMUApi::class.java)
+                .baseUrl(Constants.BASE_URL)
+                .client(okHttpClient)
+                .addConverterFactory(json.asConverterFactory(contentType))
+                .build()
+                .create(BMUApi::class.java)
     }
 
     @Provides
     @Singleton
-    fun providePublicInfoRepository(api: BMUApi): PublicInfoRepository {
-        return PublicInfoRepositoryImpl(api)
+    fun providePublicInfoRepository(api: BMUApi, dao: BMUDao): PublicInfoRepository {
+        return PublicInfoRepositoryImpl(api, dao)
     }
 
     @Provides
     @Singleton
-    fun provideDepartmentDetailRepository(api: BMUApi): DepartmentDetailRepository {
-        return DepartmentDetailRepositoryImpl(api)
+    fun provideDepartmentDetailRepository(api: BMUApi, dao: BMUDao): DepartmentDetailRepository {
+        return DepartmentDetailRepositoryImpl(api, dao)
     }
 }
