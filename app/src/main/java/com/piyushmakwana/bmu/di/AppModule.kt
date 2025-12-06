@@ -79,4 +79,12 @@ object AppModule {
     fun provideDepartmentDetailRepository(api: BMUApi, dao: BMUDao): DepartmentDetailRepository {
         return DepartmentDetailRepositoryImpl(api, dao)
     }
+
+    @Provides
+    @Singleton
+    fun provideConnectivityObserver(
+            @ApplicationContext context: Context
+    ): com.piyushmakwana.bmu.util.connectivity.ConnectivityObserver {
+        return com.piyushmakwana.bmu.util.connectivity.NetworkConnectivityObserver(context)
+    }
 }
