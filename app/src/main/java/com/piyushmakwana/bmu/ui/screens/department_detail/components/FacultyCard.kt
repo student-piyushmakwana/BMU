@@ -38,77 +38,77 @@ import com.piyushmakwana.bmu.ui.common.ShimmerImage
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun FacultyCard(
-        faculty: Faculty,
-        modifier: Modifier = Modifier,
-        onImageLongClick: (String) -> Unit,
-        onClick: () -> Unit
+    faculty: Faculty,
+    modifier: Modifier = Modifier,
+    onImageLongClick: (String) -> Unit,
+    onClick: () -> Unit
 ) {
     Card(
-            onClick = onClick,
-            modifier = modifier.width(150.dp).height(220.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors =
-                    CardDefaults.cardColors(
-                            containerColor =
-                                    MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                    )
+        onClick = onClick,
+        modifier = modifier.width(150.dp).height(220.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors =
+            CardDefaults.cardColors(
+                containerColor =
+                    MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+            )
     ) {
         Column(
-                modifier = Modifier.fillMaxWidth().padding(12.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.fillMaxWidth().padding(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val isPhotoValid =
-                    remember(faculty.photo) {
-                        val photo = faculty.photo
-                        !photo.isNullOrBlank() &&
-                                listOf(".jpg", ".jpeg", ".png", ".webp").any {
-                                    photo.endsWith(it, ignoreCase = true)
-                                }
-                    }
+                remember(faculty.photo) {
+                    val photo = faculty.photo
+                    !photo.isNullOrBlank() &&
+                            listOf(".jpg", ".jpeg", ".png", ".webp").any {
+                                photo.endsWith(it, ignoreCase = true)
+                            }
+                }
 
             Box(
-                    modifier =
-                            Modifier.size(88.dp)
-                                    .clip(CircleShape)
-                                    .background(
-                                            Brush.linearGradient(
-                                                    colors =
-                                                            listOf(
-                                                                    MaterialTheme.colorScheme
-                                                                            .primary.copy(
-                                                                            alpha = 0.3f
-                                                                    ),
-                                                                    MaterialTheme.colorScheme
-                                                                            .tertiary.copy(
-                                                                            alpha = 0.3f
-                                                                    )
-                                                            )
+                modifier =
+                    Modifier.size(88.dp)
+                        .clip(CircleShape)
+                        .background(
+                            Brush.linearGradient(
+                                colors =
+                                    listOf(
+                                        MaterialTheme.colorScheme
+                                            .primary.copy(
+                                                alpha = 0.3f
+                                            ),
+                                        MaterialTheme.colorScheme
+                                            .tertiary.copy(
+                                                alpha = 0.3f
                                             )
                                     )
-                                    .padding(3.dp)
-                                    .combinedClickable(
-                                            onClick = onClick,
-                                            onLongClick = {
-                                                if (isPhotoValid) {
-                                                    onImageLongClick(faculty.photo!!)
-                                                }
-                                            }
-                                    ),
-                    contentAlignment = Alignment.Center
+                            )
+                        )
+                        .padding(3.dp)
+                        .combinedClickable(
+                            onClick = onClick,
+                            onLongClick = {
+                                if (isPhotoValid) {
+                                    onImageLongClick(faculty.photo!!)
+                                }
+                            }
+                        ),
+                contentAlignment = Alignment.Center
             ) {
                 if (isPhotoValid) {
                     ShimmerImage(
-                            model = faculty.photo,
-                            contentDescription = faculty.name,
-                            modifier = Modifier.size(82.dp).clip(CircleShape),
-                            contentScale = ContentScale.Crop
+                        model = faculty.photo,
+                        contentDescription = faculty.name,
+                        modifier = Modifier.size(82.dp).clip(CircleShape),
+                        contentScale = ContentScale.Crop
                     )
                 } else {
                     Icon(
-                            imageVector = Icons.Rounded.Person,
-                            contentDescription = null,
-                            modifier = Modifier.size(48.dp),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        imageVector = Icons.Rounded.Person,
+                        contentDescription = null,
+                        modifier = Modifier.size(48.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -116,39 +116,40 @@ fun FacultyCard(
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                    text = faculty.name,
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    textAlign = TextAlign.Center,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.fillMaxWidth()
+                text = faculty.name,
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                    text = faculty.designation,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.fillMaxWidth()
+                text = faculty.designation,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Box(
+            if (faculty.specialization.isNotBlank()) {
+                Box(
                     modifier =
-                            Modifier.clip(RoundedCornerShape(8.dp))
-                                    .background(
-                                            MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-                                    )
-                                    .padding(horizontal = 8.dp, vertical = 4.dp)
-            ) {
-                Text(
+                        Modifier.clip(RoundedCornerShape(8.dp))
+                            .background(
+                                MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+                            )
+                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                ) {
+                    Text(
                         text = faculty.specialization,
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.primary,
@@ -156,7 +157,8 @@ fun FacultyCard(
                         textAlign = TextAlign.Center,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
-                )
+                    )
+                }
             }
         }
     }

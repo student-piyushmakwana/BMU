@@ -37,23 +37,12 @@ data class DepartmentDetailDataDto(
 
 @Serializable
 data class DirectorDto(
-    @SerialName("email")
-    val email: String? = null,
-
-    @SerialName("message")
-    val message: String? = null,
-
-    @SerialName("name")
-    val name: String? = null,
-
-    @SerialName("photo")
-    val photo: String? = null,
-
-    @SerialName("qualification")
-    val qualification: String? = null,
-
-    @SerialName("teaching_experience")
-    val teachingExperience: String? = null
+        @SerialName("email") val email: String? = null,
+        @SerialName("message") val message: String? = null,
+        @SerialName("name") val name: String? = null,
+        @SerialName("photo") val photo: String? = null,
+        @SerialName("qualification") val qualification: String? = null,
+        @SerialName("teaching_experience") val teachingExperience: String? = null
 )
 
 @Serializable
@@ -63,7 +52,7 @@ data class FacultyDto(
         @SerialName("name") val name: String,
         @SerialName("photo") val photo: String? = null,
         @SerialName("qualification") val qualification: String? = null,
-        @SerialName("specialization") val specialization: String
+        @SerialName("specialization") val specialization: String? = null
 )
 
 @Serializable
@@ -115,19 +104,19 @@ data class StudentRecruitedDto(
 )
 
 fun DepartmentDetailDataDto.toDomain(): DepartmentDetail {
-    return DepartmentDetail(
-            id = id,
-            bmuId = bmuId,
-            name = name,
-            shortName = shortName,
-            director = director?.toDomain(),
-            faculty = faculty.map { it.toDomain() },
-            gallery = gallery.map { it.toDomain() },
-            infrastructure = infrastructure.map { it.toDomain() },
-            placement = placement.map { it.toDomain() },
-            programs = programs.map { (key, value) -> key to value.toDomain() }.toMap(),
-            studentsRecruited = studentsRecruited.map { it.toDomain() }
-    )
+        return DepartmentDetail(
+                id = id,
+                bmuId = bmuId,
+                name = name,
+                shortName = shortName,
+                director = director?.toDomain(),
+                faculty = faculty.map { it.toDomain() },
+                gallery = gallery.map { it.toDomain() },
+                infrastructure = infrastructure.map { it.toDomain() },
+                placement = placement.map { it.toDomain() },
+                programs = programs.map { (key, value) -> key to value.toDomain() }.toMap(),
+                studentsRecruited = studentsRecruited.map { it.toDomain() }
+        )
 }
 
 fun DirectorDto.toDomain() =
@@ -147,7 +136,7 @@ fun FacultyDto.toDomain() =
                 name = name,
                 photo = photo,
                 qualification = qualification,
-                specialization = specialization
+                specialization = specialization ?: ""
         )
 
 fun GalleryItemDto.toDomain() = GalleryItem(images = images, title = title)

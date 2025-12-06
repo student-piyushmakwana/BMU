@@ -691,7 +691,7 @@ fun DepartmentDetailScreen(
                                     val isPhotoValid =
                                         member.photo != null &&
                                                 listOf(".jpg", ".jpeg", ".png", ".webp").any {
-                                                    member.photo!!.endsWith(
+                                                    member.photo.endsWith(
                                                         it,
                                                         ignoreCase = true
                                                     )
