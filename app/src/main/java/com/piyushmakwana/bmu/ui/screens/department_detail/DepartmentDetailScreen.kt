@@ -54,6 +54,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -691,10 +692,7 @@ fun DepartmentDetailScreen(
                                     val isPhotoValid =
                                         member.photo != null &&
                                                 listOf(".jpg", ".jpeg", ".png", ".webp").any {
-                                                    member.photo.endsWith(
-                                                        it,
-                                                        ignoreCase = true
-                                                    )
+                                                    member.photo.endsWith(it, ignoreCase = true)
                                                 }
                                     if (isPhotoValid) {
                                         ShimmerImage(
@@ -827,7 +825,7 @@ fun DetailRow(
     isCopyable: Boolean = false
 ) {
     if (value.isNotBlank()) {
-        val clipboardManager = androidx.compose.ui.platform.LocalClipboardManager.current
+        val clipboardManager = LocalClipboardManager.current
         var isCopied by remember { mutableStateOf(false) }
 
         LaunchedEffect(isCopied) {
