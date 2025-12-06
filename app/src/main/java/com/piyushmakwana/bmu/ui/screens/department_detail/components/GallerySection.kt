@@ -38,7 +38,7 @@ fun GallerySection(
         contentPadding = PaddingValues(horizontal = 24.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        items(items = gallery) { item ->
+        items(items = gallery, key = { it.title }) { item ->
             Card(
                 onClick = { onAlbumClick(item) },
                 shape = RoundedCornerShape(16.dp),

@@ -38,7 +38,7 @@ fun InfrastructureSection(
         contentPadding = PaddingValues(horizontal = 24.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        items(items = infrastructure) { item ->
+        items(items = infrastructure, key = { it.title }) { item ->
             Card(
                 onClick = { onAlbumClick(item) },
                 shape = RoundedCornerShape(16.dp),
@@ -60,11 +60,9 @@ fun InfrastructureSection(
                                         colors =
                                             listOf(
                                                 Color.Transparent,
-                                                Color.Black
-                                                    .copy(
-                                                        alpha =
-                                                            0.8f
-                                                    )
+                                                Color.Black.copy(
+                                                    alpha = 0.8f
+                                                )
                                             )
                                     )
                                 )
