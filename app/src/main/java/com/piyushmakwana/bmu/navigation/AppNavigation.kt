@@ -28,7 +28,11 @@ fun AppNavigation() {
 
         composable(
             route = Screen.DepartmentDetail.route,
-            arguments = listOf(navArgument("bmuId") { type = NavType.StringType })
+            arguments =
+                listOf(
+                    navArgument("bmuId") { type = NavType.StringType },
+                    navArgument("shortName") { type = NavType.StringType }
+                )
         ) { DepartmentDetailScreen(navController = navController) }
     }
 }

@@ -16,7 +16,8 @@ import kotlinx.coroutines.flow.onEach
 data class DepartmentDetailState(
     val isLoading: Boolean = false,
     val departmentDetail: DepartmentDetail? = null,
-    val error: String = ""
+    val error: String = "",
+    val shortName: String = ""
 )
 
 @HiltViewModel
@@ -31,6 +32,9 @@ constructor(
     val state: State<DepartmentDetailState> = _state
 
     init {
+        val shortName = savedStateHandle.get<String>("shortName") ?: ""
+        _state.value = _state.value.copy(shortName = shortName)
+
         savedStateHandle.get<String>("bmuId")?.toIntOrNull()?.let { bmuId ->
             getDepartmentDetail(bmuId)
         }
@@ -41,16 +45,23 @@ constructor(
             .onEach { result ->
                 when (result) {
                     is Resource.Success -> {
-                        _state.value = DepartmentDetailState(departmentDetail = result.data)
+                        _state.value =
+                            _state.value.copy(
+                                departmentDetail = result.data,
+                                isLoading = false,
+                                error = ""
+                            )
                     }
                     is Resource.Error -> {
                         _state.value =
-                            DepartmentDetailState(
-                                error = result.message ?: "An unexpected error occurred"
+                            _state.value.copy(
+                                error = result.message
+                                    ?: "An unexpected error occurred",
+                                isLoading = false
                             )
                     }
                     is Resource.Loading -> {
-                        _state.value = DepartmentDetailState(isLoading = true)
+                        _state.value = _state.value.copy(isLoading = true, error = "")
                     }
                 }
             }

@@ -22,8 +22,13 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Apartment
+import androidx.compose.material.icons.rounded.Apartment
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
@@ -85,7 +90,10 @@ fun DepartmentDetailScreen(
         Scaffold(
             topBar = {
                 NativeBackTopBar(
-                    title = state.departmentDetail?.name ?: "Department Details",
+                    title =
+                        state.shortName.ifEmpty {
+                            state.departmentDetail?.shortName ?: "Department Details"
+                        },
                     onBackClick = { navController.popBackStack() },
                     maxLines = 2
                 )
@@ -104,6 +112,39 @@ fun DepartmentDetailScreen(
                         contentPadding = PaddingValues(bottom = 48.dp)
                     ) {
                         item { Spacer(modifier = Modifier.height(16.dp)) }
+
+                        item {
+                            Card(
+                                modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
+                                colors =
+                                    CardDefaults.cardColors(
+                                        containerColor =
+                                            MaterialTheme.colorScheme.surfaceVariant
+                                                .copy(alpha = 0.5f)
+                                    ),
+                                shape = RoundedCornerShape(12.dp)
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(16.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Rounded.Apartment,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(16.dp))
+                                    Text(
+                                        text = detail.name,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(32.dp))
+                        }
 
                         item {
                             NativeSectionHeader(title = "Director")

@@ -214,7 +214,8 @@ fun PublicInfoScreen(
                                         onClick = {
                                             navController.navigate(
                                                 Screen.DepartmentDetail.createRoute(
-                                                    department.bmuId
+                                                    bmuId = department.bmuId,
+                                                    shortName = department.shortName
                                                 )
                                             )
                                         }
