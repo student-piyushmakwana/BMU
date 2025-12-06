@@ -47,7 +47,7 @@ fun NativeTopBar() {
                             .background(
                                 color =
                                     MaterialTheme.colorScheme
-                                        .surfaceContainerHighest.copy(
+                                        .primaryContainer.copy(
                                             alpha = 0.5f
                                         ),
                                 shape = RoundedCornerShape(8.dp)
@@ -58,7 +58,7 @@ fun NativeTopBar() {
                         text = "Est. 2001",
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
             },
