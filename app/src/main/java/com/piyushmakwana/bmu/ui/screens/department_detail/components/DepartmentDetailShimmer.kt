@@ -26,74 +26,89 @@ import com.piyushmakwana.bmu.ui.common.shimmerEffect
 fun DepartmentDetailShimmer() {
     LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 48.dp)) {
         item {
-            Column(modifier = Modifier.padding(24.dp)) {
-                Box(
+            Spacer(modifier = Modifier.height(16.dp))
+            // Department Info Card Shimmer
+            Box(
                     modifier =
-                        Modifier.width(120.dp)
-                            .height(24.dp)
-                            .clip(RoundedCornerShape(4.dp))
-                            .shimmerEffect()
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
-                    Box(
-                        modifier =
-                            Modifier.size(100.dp)
-                                .clip(RoundedCornerShape(12.dp))
-                                .shimmerEffect()
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Column(modifier = Modifier.weight(1f)) {
-                        Box(
-                            modifier =
-                                Modifier.fillMaxWidth()
-                                    .height(20.dp)
-                                    .clip(RoundedCornerShape(4.dp))
+                            Modifier.fillMaxWidth()
+                                    .padding(horizontal = 24.dp)
+                                    .height(72.dp)
+                                    .clip(RoundedCornerShape(12.dp))
                                     .shimmerEffect()
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Box(
-                            modifier =
-                                Modifier.width(150.dp)
-                                    .height(16.dp)
-                                    .clip(RoundedCornerShape(4.dp))
-                                    .shimmerEffect()
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Box(
-                            modifier =
-                                Modifier.fillMaxWidth()
-                                    .height(60.dp)
-                                    .clip(RoundedCornerShape(4.dp))
-                                    .shimmerEffect()
-                        )
-                    }
-                }
-            }
+            )
+            Spacer(modifier = Modifier.height(32.dp))
         }
 
         item {
             Column(modifier = Modifier.padding(horizontal = 24.dp)) {
                 Box(
-                    modifier =
-                        Modifier.width(100.dp)
-                            .height(24.dp)
-                            .clip(RoundedCornerShape(4.dp))
-                            .shimmerEffect()
+                        modifier =
+                                Modifier.width(120.dp)
+                                        .height(24.dp)
+                                        .clip(RoundedCornerShape(4.dp))
+                                        .shimmerEffect()
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
+                    Box(
+                            modifier =
+                                    Modifier.size(100.dp)
+                                            .clip(RoundedCornerShape(12.dp))
+                                            .shimmerEffect()
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Box(
+                                modifier =
+                                        Modifier.fillMaxWidth()
+                                                .height(20.dp)
+                                                .clip(RoundedCornerShape(4.dp))
+                                                .shimmerEffect()
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Box(
+                                modifier =
+                                        Modifier.width(150.dp)
+                                                .height(16.dp)
+                                                .clip(RoundedCornerShape(4.dp))
+                                                .shimmerEffect()
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Box(
+                                modifier =
+                                        Modifier.fillMaxWidth()
+                                                .height(60.dp)
+                                                .clip(RoundedCornerShape(4.dp))
+                                                .shimmerEffect()
+                        )
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.height(32.dp))
+        }
+
+        item {
+            Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+                Box(
+                        modifier =
+                                Modifier.width(100.dp)
+                                        .height(24.dp)
+                                        .clip(RoundedCornerShape(4.dp))
+                                        .shimmerEffect()
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
             LazyRow(
-                contentPadding = PaddingValues(horizontal = 24.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    contentPadding = PaddingValues(horizontal = 24.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(4) {
                     Box(
-                        modifier =
-                            Modifier.width(140.dp)
-                                .height(180.dp)
-                                .clip(RoundedCornerShape(12.dp))
-                                .shimmerEffect()
+                            modifier =
+                                    Modifier.width(140.dp)
+                                            .height(180.dp)
+                                            .clip(RoundedCornerShape(12.dp))
+                                            .shimmerEffect()
                     )
                 }
             }
@@ -103,20 +118,20 @@ fun DepartmentDetailShimmer() {
         item {
             Column(modifier = Modifier.padding(horizontal = 24.dp)) {
                 Box(
-                    modifier =
-                        Modifier.width(120.dp)
-                            .height(24.dp)
-                            .clip(RoundedCornerShape(4.dp))
-                            .shimmerEffect()
+                        modifier =
+                                Modifier.width(120.dp)
+                                        .height(24.dp)
+                                        .clip(RoundedCornerShape(4.dp))
+                                        .shimmerEffect()
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 repeat(3) {
                     Box(
-                        modifier =
-                            Modifier.fillMaxWidth()
-                                .height(56.dp)
-                                .clip(RoundedCornerShape(8.dp))
-                                .shimmerEffect()
+                            modifier =
+                                    Modifier.fillMaxWidth()
+                                            .height(56.dp)
+                                            .clip(RoundedCornerShape(8.dp))
+                                            .shimmerEffect()
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
@@ -127,25 +142,25 @@ fun DepartmentDetailShimmer() {
         item {
             Column(modifier = Modifier.padding(horizontal = 24.dp)) {
                 Box(
-                    modifier =
-                        Modifier.width(80.dp)
-                            .height(24.dp)
-                            .clip(RoundedCornerShape(4.dp))
-                            .shimmerEffect()
+                        modifier =
+                                Modifier.width(80.dp)
+                                        .height(24.dp)
+                                        .clip(RoundedCornerShape(4.dp))
+                                        .shimmerEffect()
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
             LazyRow(
-                contentPadding = PaddingValues(horizontal = 24.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    contentPadding = PaddingValues(horizontal = 24.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(3) {
                     Box(
-                        modifier =
-                            Modifier.width(200.dp)
-                                .height(150.dp)
-                                .clip(RoundedCornerShape(12.dp))
-                                .shimmerEffect()
+                            modifier =
+                                    Modifier.width(200.dp)
+                                            .height(150.dp)
+                                            .clip(RoundedCornerShape(12.dp))
+                                            .shimmerEffect()
                     )
                 }
             }
@@ -155,25 +170,25 @@ fun DepartmentDetailShimmer() {
         item {
             Column(modifier = Modifier.padding(horizontal = 24.dp)) {
                 Box(
-                    modifier =
-                        Modifier.width(130.dp)
-                            .height(24.dp)
-                            .clip(RoundedCornerShape(4.dp))
-                            .shimmerEffect()
+                        modifier =
+                                Modifier.width(130.dp)
+                                        .height(24.dp)
+                                        .clip(RoundedCornerShape(4.dp))
+                                        .shimmerEffect()
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
             LazyRow(
-                contentPadding = PaddingValues(horizontal = 24.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    contentPadding = PaddingValues(horizontal = 24.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(3) {
                     Box(
-                        modifier =
-                            Modifier.width(200.dp)
-                                .height(150.dp)
-                                .clip(RoundedCornerShape(12.dp))
-                                .shimmerEffect()
+                            modifier =
+                                    Modifier.width(200.dp)
+                                            .height(150.dp)
+                                            .clip(RoundedCornerShape(12.dp))
+                                            .shimmerEffect()
                     )
                 }
             }
