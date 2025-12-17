@@ -92,3 +92,38 @@ class FeePostingData(BaseModel):
     fee_plan_info: FeePlanInfo
     fee_heads: List[FeeHead]
     totals: FeePostingTotals
+
+
+class PendingFeeHead(BaseModel):
+    sr_no: Optional[str]
+    fee_head: Optional[str]
+    fees_to_be_paid: Optional[str]
+    paid_amount: Optional[str]
+    in_process_amount: Optional[str]
+    outstanding_amount: Optional[str]
+
+class PaymentInfo(BaseModel):
+    pg_name: Optional[str]
+    payment_environment: Optional[str]
+    bank_account_id: Optional[str]
+    semester: Optional[str]
+    payment_gateway_id: Optional[str]
+    payment_product_name: Optional[str]
+    currency_id: Optional[str]
+
+class PendingFeesData(BaseModel):
+    semester: Optional[str]
+    fee_heads: List[PendingFeeHead]
+    total_fees_to_be_paid: Optional[str]
+    total_paid_amount: Optional[str]
+    total_in_process_amount: Optional[str]
+    total_outstanding_amount: Optional[str]
+    note: Optional[List[str]]
+    due_date_info: Optional[str]
+    payment_info: Optional[PaymentInfo]
+
+
+class PaymentInitiationResponse(BaseModel):
+    success: bool
+    redirect_url: Optional[str]
+    message: Optional[str]

@@ -3,7 +3,7 @@ import logging
 import httpx
 from bs4 import BeautifulSoup
 from app.core.config import config
-from app.modules.student.fees.models import FeeHistoryData, FeePostingData
+from app.modules.student.fees.models import FeeHistoryData, FeePostingData, PendingFeesData, PaymentInitiationResponse
 from typing import Optional
 
 logger = logging.getLogger("bmu.modules.student.fees.viewmodel")
@@ -18,6 +18,7 @@ class ExternalServiceError(FeesError):
 
 class StudentFeesViewModel:
     FEE_HISTORY_URL = "https://bmu.gnums.co.in/StudentPanel/Fee/StudentFeeHistory.aspx"
+    FEE_DASHBOARD_URL = "https://bmu.gnums.co.in/StudentPanel/Fee/FEE_FeeDashboard.aspx"
 
     async def fetch_fee_history(self, session_cookies: dict) -> FeeHistoryData:
         try:
@@ -287,5 +288,198 @@ class StudentFeesViewModel:
             "fee_heads": fee_heads,
             "totals": totals
         }
+
+    async def fetch_pending_fees(self, session_cookies: dict) -> PendingFeesData:
+        try:
+            cookies_jar = httpx.Cookies()
+            for k, v in session_cookies.items():
+                cookies_jar.set(k, v, domain="bmu.gnums.co.in")
+
+            async with httpx.AsyncClient(
+                cookies=cookies_jar,
+                follow_redirects=True,
+                timeout=config.REQUEST_TIMEOUT
+            ) as client:
+                resp = await client.get(self.FEE_DASHBOARD_URL)
+                
+                if resp.status_code != 200:
+                    raise ExternalServiceError(f"Failed to fetch fee dashboard. Status: {resp.status_code}")
+
+                soup = BeautifulSoup(resp.text, "html.parser")
+                
+                if soup.find("input", {"id": "txtUsername"}):
+                     raise FeesError("Invalid session or expired cookies.")
+
+                data = self._parse_pending_fees(soup)
+                return PendingFeesData(**data)
+
+        except FeesError:
+            raise
+        except Exception as e:
+            logger.error(f"Error fetching pending fees: {e}", exc_info=True)
+            raise ExternalServiceError(f"Unexpected error: {e}")
+
+    def _parse_pending_fees(self, soup: BeautifulSoup) -> dict:
+        def get_text(_id):
+            el = soup.find(id=_id)
+            return el.get_text(strip=True) if el else None
+
+        fee_heads = []
+        table = soup.select_one("div#ctl00_cphPageContent_Div_CurrentAcademicFeeDetails table")
+        if table and table.find("tbody"):
+            for tr in table.find("tbody").find_all("tr"):
+                tds = tr.find_all("td")
+                if len(tds) < 6: continue
+                
+                fee_heads.append({
+                    "sr_no": tds[0].get_text(strip=True).split()[0], # Remove hidden inputs if any text sticks
+                    "fee_head": tds[1].get_text(strip=True),
+                    "fees_to_be_paid": tds[2].get_text(strip=True),
+                    "paid_amount": tds[3].get_text(strip=True),
+                    "in_process_amount": tds[4].get_text(strip=True),
+                    "outstanding_amount": tds[5].get_text(strip=True),
+                })
+
+        semester = get_text("ctl00_cphPageContent_rpSemesterWise_ctl00_lblSemester")
+        
+        # Parse notes
+        notes = []
+        note_div = soup.select_one("div.note.note-info ul")
+        if note_div:
+            for li in note_div.find_all("li"):
+                notes.append(li.get_text(strip=True))
+
+        # Parse due date info
+        due_date_info = get_text("ctl00_cphPageContent_rpSemesterWise_ctl00_rpBankAccountWise_ctl00_lblFeeDurationInfo")
+
+        # Parse totals
+        totals = {
+            "total_fees_to_be_paid": get_text("ctl00_cphPageContent_rpSemesterWise_ctl00_rpBankAccountWise_ctl00_lblTotalCurrentSemFee"),
+            "total_paid_amount": get_text("ctl00_cphPageContent_rpSemesterWise_ctl00_rpBankAccountWise_ctl00_lblTotalAmountPaid"),
+            "total_in_process_amount": get_text("ctl00_cphPageContent_rpSemesterWise_ctl00_rpBankAccountWise_ctl00_lblTotalInProcessAmount"),
+            "total_outstanding_amount": get_text("ctl00_cphPageContent_rpSemesterWise_ctl00_rpBankAccountWise_ctl00_lblTotalAmountOutStanding"),
+        }
+
+        # Parse payment info
+        payment_info = None
+        def get_value(_id):
+            el = soup.find("input", {"id": _id})
+            return el.get("value") if el else None
+
+        pg_name = get_value("ctl00_cphPageContent_rpSemesterWise_ctl00_rpBankAccountWise_ctl00_hfPGName")
+        if pg_name:
+            payment_info = {
+                "pg_name": pg_name,
+                "payment_environment": get_value("ctl00_cphPageContent_rpSemesterWise_ctl00_rpBankAccountWise_ctl00_hfPaymentEnvironment"),
+                "bank_account_id": get_value("ctl00_cphPageContent_rpSemesterWise_ctl00_rpBankAccountWise_ctl00_hfBankAccountID"),
+                "semester": get_value("ctl00_cphPageContent_rpSemesterWise_ctl00_rpBankAccountWise_ctl00_hfSemester"),
+                "payment_gateway_id": get_value("ctl00_cphPageContent_rpSemesterWise_ctl00_rpBankAccountWise_ctl00_hfPaymentGatewayID"),
+                "payment_product_name": get_value("ctl00_cphPageContent_rpSemesterWise_ctl00_rpBankAccountWise_ctl00_hfPaymentProductNameTuitionFees"),
+                "currency_id": get_value("ctl00_cphPageContent_rpSemesterWise_ctl00_rpBankAccountWise_ctl00_CurrencyID"),
+            }
+
+        return {
+            "semester": semester,
+            "fee_heads": fee_heads,
+            "note": notes,
+            "due_date_info": due_date_info,
+            "payment_info": payment_info,
+            **totals
+        }
+
+    async def initiate_payment(self, session_cookies: dict) -> PaymentInitiationResponse:
+        try:
+            cookies_jar = httpx.Cookies()
+            for k, v in session_cookies.items():
+                cookies_jar.set(k, v, domain="bmu.gnums.co.in")
+
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                "Referer": self.FEE_DASHBOARD_URL,
+                "Origin": "https://bmu.gnums.co.in"
+            }
+
+            async with httpx.AsyncClient(
+                cookies=cookies_jar,
+                headers=headers,
+                follow_redirects=True, # We want to follow to see where it lands, unless we want to catch the 302 specifically. 
+                # Actually, follow_redirects=True is good. If it goes to Gateway, we get the Gateway page content.
+                timeout=config.REQUEST_TIMEOUT
+            ) as client:
+                # 1. Get the dashboard to get fresh ViewStates and form data
+                logger.info("Fetching dashboard for payment initiation...")
+                resp_get = await client.get(self.FEE_DASHBOARD_URL)
+                
+                if resp_get.status_code != 200:
+                    raise ExternalServiceError(f"Failed to fetch dashboard for payment. Status: {resp_get.status_code}")
+
+                soup = BeautifulSoup(resp_get.text, "html.parser")
+                
+                if soup.find("input", {"id": "txtUsername"}):
+                     raise FeesError("Invalid session or expired cookies.")
+
+                # 2. Extract all form inputs
+                data = {}
+                form = soup.find("form", {"id": "form1"}) or soup.find("form", {"id": "aspnetForm"}) # Try both typical IDs
+                if not form:
+                    # Fallback to searching all inputs if form not found or non-standard
+                    for inp in soup.find_all("input"):
+                         name = inp.get("name")
+                         if name:
+                             data[name] = inp.get("value", "")
+                else:
+                    for inp in form.find_all("input"):
+                        name = inp.get("name")
+                        if name:
+                            data[name] = inp.get("value", "")
+                
+                # 3. Handle the specific button "Pay Now"
+                pay_btn_name = None
+                pay_btn = soup.find("input", {"value": "Pay Now"})
+                if pay_btn:
+                    pay_btn_name = pay_btn.get("name")
+                else:
+                    pay_btn = soup.find("input", id=lambda x: x and x.endswith("btnAcademicFeeOnline"))
+                    if pay_btn:
+                         pay_btn_name = pay_btn.get("name")
+                
+                if not pay_btn_name:
+                    logger.error("Could not find Pay Now button on the page.")
+                    # It's possible there are no pending fees or the button is hidden/disabled.
+                    # Or maybe the text is different.
+                    raise FeesError("Could not find the 'Pay Now' button. Check if there are pending fees.")
+
+                data[pay_btn_name] = "Pay Now"
+
+                # 4. Post the data
+                logger.info("Posting payment initiation data...")
+                # Note: ASP.NET postbacks need to be form-urlencoded. httpx data=dict does this automatically.
+                resp_post = await client.post(self.FEE_DASHBOARD_URL, data=data)
+
+                if resp_post.status_code != 200:
+                    raise ExternalServiceError(f"Payment initiation failed. Status: {resp_post.status_code}")
+
+                # 5. Check Result
+                final_url = str(resp_post.url)
+                
+                # If we are still on the dashboard, it means the redirect didn't happen.
+                # Use a looser check because of query params
+                if self.FEE_DASHBOARD_URL in final_url or "StudentPanel/Fee/FEE_FeeDashboard.aspx" in final_url:
+                     # Check if we got the same page back.
+                     # Sometimes the gateway is an iframe or a diverse response.
+                     # But if it's the exact same page, scraping failed to trigger.
+                     pass 
+
+                return PaymentInitiationResponse(
+                    success=True,
+                    redirect_url=final_url if final_url != self.FEE_DASHBOARD_URL else None,
+                    message="Payment initiated. Check redirect_url."
+                )
+
+        except FeesError:
+            raise
+        except Exception as e:
+            logger.error(f"Error iterating payment: {e}", exc_info=True)
+            raise ExternalServiceError(f"Unexpected error: {e}")
 
 student_fees_viewmodel = StudentFeesViewModel()
